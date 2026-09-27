@@ -1,0 +1,149 @@
+---
+config:
+    theme: neo
+    flowchart:
+        curve: step
+---
+flowchart LR
+
+    %% Response generation pipeline
+    subgraph ResponseGeneration [Response generation pipeline]
+        direction LR
+        Server["`fa:fa-file-text`"]:::inputs
+        subgraph ResponseGenerationPipeline [" "]
+            direction LR
+            ConfidenceFilter["Confidence Filter"]:::fn -->
+            SecurityValidation["Security Validation"]:::fn -->
+            SensitiveWordFilter["Sensitive Word Filter"]:::fn
+        end
+        User["`fa:fa-user-circle`"]:::outputs
+        Server e7@==> ConfidenceFilter
+        SensitiveWordFilter e8@==> User
+        e7@{ animate: true }
+        e8@{ animate: true }
+    end
+
+    %% Wrokflow Agent Pipeline
+
+    %% Tool Using Agent Pipeline
+
+    %% Plan And Execute Agent Pipeline
+
+    %% Reflection Agent Pipeline
+
+    %% ReAct Agent Pipeline
+    subgraph ReActAgent [ReAct Agent Pipeline]
+        direction LR
+        All1["`fa:fa-comments Chat
+        fa:fa-database Memory
+        fa:fa-file-text RAG
+        fa:fa-wrench Tools
+        fa:fa-code Skills`"]:::inputs
+        subgraph ReActAgentPipeline [" "]
+            direction LR
+            In1(("In")):::fn
+            decision1{"`is >= MaxRound
+            or is final`"}:::fn
+            Thought["Thought"]:::fn
+            Action["Action"]:::fn
+            Evlution1["Evlution"]:::fn
+            Out1(("Out")):::fn
+
+            In1 --> decision1
+            decision1 --No--> Thought
+            decision1 --Yes--> Out1
+            Thought --> Action
+            Action --> Evlution1
+            Evlution1 --> In1
+        end
+        Text2["`fa:fa-file-text Text`"]:::outputs
+        All1 e9@==> In1
+        Out1 e10@==> Text2
+        e9@{ animate: true }
+        e10@{ animate: true }
+    end
+
+    %% Memory And Dream saving pipeline
+    subgraph MemorySaving [Memory saving pipeline]
+        direction LR
+        Message1["`fa:fa-comments`"]:::inputs
+        subgraph MemorySavingPipeline [" "]
+            direction LR
+            LeftIn2["`fa:fa-circle`"]:::inputDot -->
+            FeatureExtraction["Feature Extraction"]:::fn & RelationExtraction["Relation Extraction"]:::fn & EntityExtraction["Entity Extraction"]:::fn -->
+            Filtering["Filtering"]:::fn -->
+            Summarizing["Summarizing"]:::fn -->
+            Checking["Checking"]:::fn -->
+            Saving["Saving"]:::fn
+        end
+        Database3["`fa:fa-database
+        fa:fa-archive
+        fa:fa-code-fork`"]:::outputs
+        Message1 e5@==> LeftIn2
+        Saving e6@==> Database3
+        e5@{ animate: true }
+        e6@{ animate: true }
+    end
+    
+    %% Retrieve data from database
+    subgraph RetrieveData [Pipeline for retrieving data from database]
+        direction LR
+        Database2["`fa:fa-database
+        fa:fa-archive
+        fa:fa-code-fork`"]:::inputs
+        subgraph RetrieveDataPipeline [" "]
+            direction LR
+            LeftIn1["`fa:fa-circle`"]:::inputDot -->
+            QueryVector[Query Vector]:::fn & QuerySummary[Query Summary]:::fn --> 
+            Rerank[Rerank]:::fn --> Topk["Top-k"]:::fn --> CausalSearch["Causal Search"]:::fn
+        end
+        Text["`fa:fa-file-text`"]:::outputs
+        Database2 e1@==> LeftIn1
+        CausalSearch e2@==> Text
+        e1@{ animate: true }
+        e2@{ animate: true }
+    end
+
+    %% Parse files pipeline
+    subgraph ParseFiles [Pipeline for parsing files]
+        direction LR
+        Files["`fa:fa-file-text fa:fa-file-image 
+        fa:fa-file-pdf fa:fa-file-word`"]:::inputs
+        subgraph ParserPipeline [" "]
+            direction LR
+            OCR:::fn --> Parse:::fn --> 
+            Transform:::fn --> Summarize:::fn
+        end
+        Database1["`fa:fa-database
+        fa:fa-archive
+        fa:fa-code-fork`"]:::outputs
+        Files e3@==> OCR
+        Summarize e4@==> Database1
+        e3@{ animate: true }
+        e4@{ animate: true }
+    end
+
+    %% Legend
+    subgraph Legend [Legend]
+        direction TB
+        subgraph SyncPipeline [Sync Pipeline]
+            direction LR
+        end
+        subgraph AsyncPipeline [Async Pipeline]
+            direction LR
+        end
+    end
+
+    %% style definitions
+    classDef inputs fill:transparent,stroke:#000000,stroke-width:1;
+    classDef outputs fill:transparent,stroke:#000000,stroke-width:1;
+    classDef fn fill:transparent,stroke:#000000,stroke-width:1,stroke-dasharray:3,3;
+    classDef inputDot fill:transparent,stroke:#000000,stroke-width:0;
+
+    %% style definitions for subgraphs
+    classDef pipelinecontainer fill:transparent,stroke-width:0;
+    classDef syncpipeline fill:#F0FDFA,stroke-width:1;
+    classDef asyncpipeline fill:#FDF4FF,stroke-width:1;
+    class Legend,RetrieveData,ParseFiles,MemorySaving,ResponseGeneration,ReActAgent pipelinecontainer;
+    class SyncPipeline,RetrieveDataPipeline,ResponseGenerationPipeline,ReActAgentPipeline syncpipeline;
+    class AsyncPipeline,ParserPipeline,MemorySavingPipeline asyncpipeline;
