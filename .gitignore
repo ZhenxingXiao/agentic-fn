@@ -1,0 +1,92 @@
+# --- Python bytecode & type/check caches ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.pytype/
+.pyright/
+.pyre/
+.hypothesis/
+.cache/
+
+# --- Virtual environments ---
+.venv/
+venv/
+ENV/
+env/
+.env/
+__pypackages__/
+
+# --- Packaging / build artifacts ---
+build/
+dist/
+wheels/
+wheelhouse/
+*.egg-info/
+.eggs/
+*.egg
+*.whl
+pip-wheel-metadata/
+*.manifest
+*.spec
+
+# --- uv / local toolchain overrides ---
+# Keep committed: .python-version, uv.lock (reproducible installs)
+.python-version.local
+.uv-cache/
+
+# --- Tests / coverage ---
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+nosetests.xml
+*.cover
+.cache/hypothesis/
+
+# --- Logs & temp ---
+*.log
+*.tmp
+*.temp
+*.bak
+*~
+
+# --- Notebooks ---
+.ipynb_checkpoints/
+
+# --- IDE / editors ---
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# --- OS junk ---
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# --- Env / secrets (never commit) ---
+.env
+.env.*
+!.env.example
+!.env.sample
+secrets/
+*.pem
+*.key
+credentials.json
+service-account*.json
