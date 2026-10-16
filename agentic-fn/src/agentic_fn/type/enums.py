@@ -35,6 +35,11 @@ class EventKind(str, Enum):
     PARALLEL_JOIN = "parallel.join"
     BUDGET = "budget"
     CANCELLED = "cancelled"
+    MODEL_ROUTE = "model.route"
+    MODEL_START = "model.start"
+    MODEL_SUCCESS = "model.success"
+    MODEL_FAILOVER = "model.failover"
+    MODEL_ERROR = "model.error"
 
 
 class ReplayMode(str, Enum):

@@ -11,6 +11,8 @@ This is the primary place to see how side-effect logging plugs into a pipeline:
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from agentic_fn import (
     Context,
     LogEffectOptions,
@@ -28,6 +30,9 @@ from agentic_fn.effects.log.sinks import MultiplexLogSink
 from cli.printing import banner, kv, note, print_result
 from cli.sinks import PicologgingLogSink, configure_picologging
 
+# Project-local log file (cli/logs/). Rotated by configure_picologging.
+_LOG_FILE = Path(__file__).resolve().parents[3] / "logs" / "log-effect.log"
+
 
 def run() -> None:
     """
@@ -42,8 +47,11 @@ def run() -> None:
 
     # ------------------------------------------------------------------
     # 1) Vendor setup (picologging)
+    #    Console stays on stderr. File policy lives here, not on getLogger:
+    #    RotatingFileHandler rolls at 1 MiB and keeps 3 backups.
     # ------------------------------------------------------------------
-    configure_picologging()
+    log_file = configure_picologging(log_file=_LOG_FILE, max_bytes=1_048_576, backup_count=3)
+    note(f"file log: {log_file}")
 
     # ------------------------------------------------------------------
     # 2) Framework boundary: LogSink adapters

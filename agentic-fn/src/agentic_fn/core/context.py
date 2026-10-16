@@ -23,6 +23,7 @@ from agentic_fn.type.protocols import Clock, Harness, LogSink, Tracer
 
 if TYPE_CHECKING:
     from agentic_fn.effects.log.facade import ContextLogger
+    from agentic_fn.models.runtime import ModelRuntime
 
 
 @dataclass(slots=True)
@@ -47,6 +48,7 @@ class Context:
     log_failure_policy: EmitFailurePolicy = EmitFailurePolicy.IGNORE
     log_skip_on_replay: bool = True
     log_logger_name: str = "agentic_fn"
+    models: ModelRuntime | None = None
     closed: bool = False
     _status: RunStatus = RunStatus.PENDING
     _current_path: tuple[str, ...] = ()
@@ -203,4 +205,5 @@ class Context:
             log_failure_policy=self.log_failure_policy,
             log_skip_on_replay=self.log_skip_on_replay,
             log_logger_name=self.log_logger_name,
+            models=self.models,
         )

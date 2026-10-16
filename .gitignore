@@ -54,6 +54,7 @@ nosetests.xml
 .cache/hypothesis/
 
 # --- Logs & temp ---
+logs/
 *.log
 *.tmp
 *.temp

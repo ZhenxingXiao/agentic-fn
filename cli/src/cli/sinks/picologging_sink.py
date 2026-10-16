@@ -15,9 +15,11 @@ from __future__ import annotations
 
 import sys
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 import picologging
+import picologging.handlers
 
 from agentic_fn.effects.log.errors import LogEmitError
 from agentic_fn.effects.log.record import LogRecord
@@ -44,9 +46,16 @@ def configure_picologging(
     format: str = "{levelname} | {name} | {message}",
     style: str = "{",
     stream: Any | None = None,
-) -> None:
+    log_file: str | Path | None = None,
+    max_bytes: int = 1_048_576,
+    backup_count: int = 3,
+) -> Path | None:
     """
-    One-shot console configuration for demos / scripts.
+    One-shot logging configuration for demos / scripts.
+
+    Console output always goes to ``stream`` (stderr by default). When
+    ``log_file`` is set, a ``RotatingFileHandler`` is also attached to the
+    root logger: files roll at ``max_bytes`` and keep ``backup_count`` backups.
 
     ``force=True`` replaces any existing root handlers so repeated demo runs
     in the same process do not stack duplicate handlers.
@@ -59,6 +68,20 @@ def configure_picologging(
         stream=stream or sys.stderr,
         force=True,
     )
+    if log_file is None:
+        return None
+
+    path = Path(log_file)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    file_handler = picologging.handlers.RotatingFileHandler(
+        path,
+        maxBytes=max_bytes,
+        backupCount=backup_count,
+        encoding="utf-8",
+    )
+    file_handler.setFormatter(picologging.Formatter(format, style=style))
+    picologging.getLogger().addHandler(file_handler)
+    return path
 
 
 @dataclass(slots=True)

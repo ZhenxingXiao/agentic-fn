@@ -18,6 +18,12 @@ class AllowAllHarness:
         _ = step_name, kind
         return True
 
+    def allow_model(self, logical_model: str, modality: str) -> bool:
+        """Allow every logical model."""
+
+        _ = logical_model, modality
+        return True
+
     def on_budget(self, remaining: Mapping[str, float | int | None]) -> None:
         """Ignore budget updates."""
 
@@ -34,6 +40,7 @@ class AllowlistHarness:
 
     allowed_steps: Set[str] = field(default_factory=set)
     allowed_kinds: Set[str] = field(default_factory=lambda: {"capability", "effect"})
+    allowed_models: Set[str] = field(default_factory=set)
 
     def allow_step(self, step_name: str, kind: str) -> bool:
         """Return whether the step name and kind are allow-listed."""
@@ -43,6 +50,14 @@ class AllowlistHarness:
         if not self.allowed_steps:
             return True
         return step_name in self.allowed_steps
+
+    def allow_model(self, logical_model: str, modality: str) -> bool:
+        """Return whether the logical model is allow-listed (empty set = allow all)."""
+
+        _ = modality
+        if not self.allowed_models:
+            return True
+        return logical_model in self.allowed_models
 
     def on_budget(self, remaining: Mapping[str, float | int | None]) -> None:
         """Ignore budget updates in the base allowlist harness."""
